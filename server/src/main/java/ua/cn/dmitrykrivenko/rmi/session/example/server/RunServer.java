@@ -54,7 +54,7 @@ public class RunServer {
                     UnicastRemoteObject.unexportObject(sessionService, true);
 
                     dataGenerator.interrupt();
-                    while (!dataGenerator.isAlive()) {
+                    while (dataGenerator.isAlive()) {
                     }
 
                     System.out.println("Server has stopped");
