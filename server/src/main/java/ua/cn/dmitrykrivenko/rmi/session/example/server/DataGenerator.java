@@ -42,6 +42,8 @@ public enum DataGenerator implements Runnable {
     }
 
     public List<Integer> getData() {
-        return (List<Integer>) data.clone();
+        synchronized (data) {
+            return new LinkedList<Integer>(data);
+        }
     }
 }
