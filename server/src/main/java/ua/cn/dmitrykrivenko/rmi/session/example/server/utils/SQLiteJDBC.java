@@ -18,6 +18,9 @@ public class SQLiteJDBC {
     private static final String CONNECTION = "jdbc:sqlite:" + DB_FILE;
     private static final int DEFAULT_USER_COUNT = 10;
 
+    private SQLiteJDBC() {
+    }
+
     public static void createTable() throws SQLException {
         Connection c = null;
         Statement stmt = null;
