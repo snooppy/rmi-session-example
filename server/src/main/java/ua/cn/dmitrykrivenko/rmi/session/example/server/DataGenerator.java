@@ -7,15 +7,15 @@ import java.util.List;
  *
  * @author Dmitry Krivenko <dmitrykrivenko@gmail.com>
  */
-public enum DataGenerator implements Runnable {
+public class DataGenerator implements Runnable {
 
-    INSTANCE;
     private final LinkedList<Integer> data = new LinkedList<Integer>();
+    private volatile boolean stop;
 
     public void run() {
         try {
             initData();
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!stop) {
                 Thread.sleep(1000);
                 changeData();
             }
@@ -45,5 +45,9 @@ public enum DataGenerator implements Runnable {
         synchronized (data) {
             return new LinkedList<Integer>(data);
         }
+    }
+
+    public void stop() {
+        stop = true;
     }
 }

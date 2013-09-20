@@ -16,15 +16,22 @@ import ua.cn.dmitrykrivenko.rmi.session.example.server.SessionStorage;
  */
 public class SessionImpl extends UnicastRemoteObject implements Session {
 
+    private DataGenerator dataGenerator;
+
     public SessionImpl() throws RemoteException {
         super();
+    }
+
+    public SessionImpl(DataGenerator dataGenerator) throws RemoteException {
+        super();
+        this.dataGenerator = dataGenerator;
     }
 
     public List<Integer> getData(boolean reverse, UUID sessionId) throws SessionException, RemoteException {
         if (!SessionStorage.INSTANCE.sessionIdExists(sessionId)) {
             throw new SessionException("Session id does not exist", 2);
         }
-        List<Integer> data = DataGenerator.INSTANCE.getData();
+        List<Integer> data = dataGenerator.getData();
         if (!reverse) {
             return data;
         }

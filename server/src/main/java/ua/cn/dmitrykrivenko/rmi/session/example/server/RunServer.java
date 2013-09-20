@@ -31,16 +31,19 @@ public class RunServer {
         try {
             SQLiteJDBC.createTable();
             SQLiteJDBC.fillTable();
+            DataGenerator dataGenerator = new DataGenerator();
+
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
             Login loginService = new LoginImpl();
-            Session sessionService = new SessionImpl();
+            Session sessionService = new SessionImpl(dataGenerator);
 
             Naming.rebind(LOGIN_SERVICE, loginService);
             Naming.rebind(SESSION_SERVICE, sessionService);
 
-            Thread dataGenerator = new Thread(DataGenerator.INSTANCE);
-            dataGenerator.start();
+
+            Thread dataGeneratorThread = new Thread(dataGenerator);
+            dataGeneratorThread.start();
 
             System.out.println("Server has started...");
             console.printf("To correctly stop server use command - %s\n", STOP_COMMAND);
@@ -53,9 +56,8 @@ public class RunServer {
                     UnicastRemoteObject.unexportObject(loginService, true);
                     UnicastRemoteObject.unexportObject(sessionService, true);
 
-                    dataGenerator.interrupt();
-                    while (dataGenerator.isAlive()) {
-                    }
+                    dataGenerator.stop();
+                    dataGeneratorThread.join();
 
                     System.out.println("Server has stopped");
                     break;
